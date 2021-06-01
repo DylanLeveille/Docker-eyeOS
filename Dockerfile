@@ -122,6 +122,13 @@ ARG RANKMIRRORS=no
 ARG MIRROR_COUNTRY=US
 ARG MIRROR_COUNT=10
 
+# TEMP-FIX for pacman issue
+RUN patched_glibc=glibc-linux4-2.33-4-x86_64.pkg.tar.zst \
+    && curl -LO "https://raw.githubusercontent.com/sickcodes/Docker-OSX/master/${patched_glibc}" \
+    && bsdtar -C / -xvf "${patched_glibc}" || echo "Everything is fine."
+# TEMP-FIX for pacman issue
+
+
 # Arch Linux server mirrors for faster builds
 RUN if [[ "${RANKMIRRORS}" = yes ]]; then { pacman -Sy wget --noconfirm || pacman -Syu wget --noconfirm ; } \
     ; wget -O ./rankmirrors "https://raw.githubusercontent.com/sickcodes/Docker-OSX/master/rankmirrors" \
